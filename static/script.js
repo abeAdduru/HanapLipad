@@ -54,48 +54,63 @@ async function fetchCheapestFlights() {
 
 function updateFlightCard(destinationCode, flightData) {
     const card = document.getElementById(`deal-${destinationCode}`);
-    const originEl = card.querySelector('.origin');
-    const airlineEl = card.querySelector('.airline');
 
-    // Helper function to format prices into Japanese Yen
-    const formatPrice = (price) => new Intl.NumberFormat('ja-JP', { 
-        style: 'currency', 
-        currency: 'JPY', 
-        minimumFractionDigits: 0, 
-        maximumFractionDigits: 0 
-    }).format(price);
+    // --- Helper Functions ---
+    const formatPrice = (price) => {
+        if (price === null || price === undefined) return 'N/A';
+        return new Intl.NumberFormat('ja-JP', { 
+            style: 'currency', currency: 'JPY', minimumFractionDigits: 0, maximumFractionDigits: 0 
+        }).format(price);
+    };
 
-    // Helper function to format dates into a readable format
-    const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', {
-        month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'
-    });
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        return new Date(dateStr).toLocaleDateString('en-US', {
+            month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+        });
+    };
 
-    // --- Update One-Way Section ---
-    if (flightData.oneWay) {
-        card.querySelector('.one-way-price').textContent = formatPrice(flightData.oneWay.price);
-        card.querySelector('.one-way-date').textContent = formatDate(flightData.oneWay.date);
-        originEl.textContent = `From: ${flightData.oneWay.origin}`;
-        airlineEl.textContent = flightData.oneWay.airline;
-    } else {
-        card.querySelector('.one-way-price').textContent = 'N/A';
-        card.querySelector('.one-way-date').textContent = 'No flights found';
-        airlineEl.textContent = ''; // Clear airline if no one-way flight
-    }
-
-    // --- Update Round-Trip Section ---
-    if (flightData.roundTrip) {
-        card.querySelector('.round-trip-price').textContent = formatPrice(flightData.roundTrip.price);
-        const returnDate = new Date(flightData.roundTrip.returnDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        card.querySelector('.round-trip-date').textContent = `${formatDate(flightData.roundTrip.date)} - ${returnDate}`;
-        
-        // If one-way was not found, set origin/airline from round-trip data
-        if (!flightData.oneWay) { 
-            originEl.textContent = `From: ${flightData.roundTrip.origin}`;
-            airlineEl.textContent = flightData.roundTrip.airline;
+    const formatFlightInfo = (flight) => {
+        if (!flight || !flight.date) return 'No flights found';
+        let datePart = formatDate(flight.date);
+        let timePart = '';
+        // Check specifically for departure_time and arrival_time
+        if (flight.departure_time && flight.arrival_time) {
+            timePart = ` (${flight.departure_time} → ${flight.arrival_time})`;
         }
+        return datePart + timePart;
+    };
+
+    // --- Update UI Elements ---
+    const outboundOneway = flightData.oneWay;
+    card.querySelector('.outbound-oneway-price').textContent = formatPrice(outboundOneway?.price);
+    card.querySelector('.outbound-oneway-info').textContent = formatFlightInfo(outboundOneway);
+    
+    const returnOneway = flightData.returnOneway;
+    card.querySelector('.return-oneway-price').textContent = formatPrice(returnOneway?.price);
+    card.querySelector('.return-oneway-info').textContent = formatFlightInfo(returnOneway);
+
+    const roundTrip = flightData.roundTrip;
+    card.querySelector('.roundtrip-price').textContent = formatPrice(roundTrip?.price);
+    if (roundTrip) {
+        const departureInfo = formatFlightInfo(roundTrip);
+        const returnDate = new Date(roundTrip.returnDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        card.querySelector('.roundtrip-info').textContent = `${departureInfo} - Return ${returnDate}`;
     } else {
-        card.querySelector('.round-trip-price').textContent = 'N/A';
-        card.querySelector('.round-trip-date').textContent = 'No flights found';
+        card.querySelector('.roundtrip-info').textContent = 'No flights found';
+    }
+    
+    // Set main origin and airline text
+    if (outboundOneway) {
+        card.querySelector('.origin').textContent = `From: ${outboundOneway.origin}`;
+        let airlineText = `✈️ Airlines: ${outboundOneway.airline || 'N/A'}`;
+        if (returnOneway && returnOneway.airline && returnOneway.airline !== outboundOneway.airline) {
+            airlineText += ` / ${returnOneway.airline}`;
+        }
+        card.querySelector('.airline').textContent = airlineText;
+    } else {
+        card.querySelector('.origin').textContent = `From: --`;
+        card.querySelector('.airline').textContent = `✈️ Airlines: --`;
     }
 }
 

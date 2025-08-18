@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japan Flight Deals</title>
+    <title>Flight Deals</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -16,7 +18,7 @@
 
     <main>
         <section class="hero">
-            <h2>Find The Best Deals Flights TYO - SG / TYO - MNL  </h2>
+            <h2>Find The Best Deals Flights TYO - SG / TYO - MNL</h2>
             <p>Select a date range to scan for the cheapest flights.</p>
             <div class="date-picker-container">
                 <label for="start-date">From:</label>
@@ -36,16 +38,21 @@
                     <div class="loading-overlay">
                         <div class="loader"></div>
                     </div>
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <h4>One-Way</h4>
-                            <p class="price one-way-price">--</p>
-                            <p class="date one-way-date">--</p>
+                    <div class="price-details">
+                        <div class="flight-option">
+                            <h4>One-Way (Outbound)</h4>
+                            <p class="price outbound-oneway-price">--</p>
+                            <p class="flight-info outbound-oneway-info">--</p>
                         </div>
-                        <div class="price-item">
-                            <h4>Round-Trip</h4>
-                            <p class="price round-trip-price">--</p>
-                            <p class="date round-trip-date">--</p>
+                        <div class="flight-option">
+                            <h4>One-Way (Return)</h4>
+                            <p class="price return-oneway-price">--</p>
+                            <p class="flight-info return-oneway-info">--</p>
+                        </div>
+                        <div class="flight-option round-trip-option">
+                            <h4>Round-Trip Ticket</h4>
+                            <p class="price roundtrip-price">--</p>
+                            <p class="flight-info roundtrip-info">--</p>
                         </div>
                     </div>
                     <p class="origin">From: --</p>
@@ -61,16 +68,21 @@
                     <div class="loading-overlay">
                         <div class="loader"></div>
                     </div>
-                    <div class="price-grid">
-                        <div class="price-item">
-                            <h4>One-Way</h4>
-                            <p class="price one-way-price">--</p>
-                            <p class="date one-way-date">--</p>
+                    <div class="price-details">
+                        <div class="flight-option">
+                            <h4>One-Way (Outbound)</h4>
+                            <p class="price outbound-oneway-price">--</p>
+                            <p class="flight-info outbound-oneway-info">--</p>
                         </div>
-                        <div class="price-item">
-                            <h4>Round-Trip</h4>
-                            <p class="price round-trip-price">--</p>
-                            <p class="date round-trip-date">--</p>
+                        <div class="flight-option">
+                            <h4>One-Way (Return)</h4>
+                            <p class="price return-oneway-price">--</p>
+                            <p class="flight-info return-oneway-info">--</p>
+                        </div>
+                        <div class="flight-option round-trip-option">
+                            <h4>Round-Trip Ticket</h4>
+                            <p class="price roundtrip-price">--</p>
+                            <p class="flight-info roundtrip-info">--</p>
                         </div>
                     </div>
                     <p class="origin">From: --</p>
